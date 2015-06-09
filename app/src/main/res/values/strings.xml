@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ScreenOff Switcher</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="label_button_start_enabled">Start ScreenOff</string>
+    <string name="label_button_stop_enabled">Stop ScreenOff</string>
+    <string name="label_button_start_disabled">ScreenOff started</string>
+    <string name="label_button_stop_disabled">ScreenOff stopped</string>
+</resources>
