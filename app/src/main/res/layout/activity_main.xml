@@ -8,27 +8,54 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <CheckBox
+        android:id="@+id/enable_receiver_checkbox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/checkbox_padding"
+        android:text="@string/label_checkbox_turn_on_screen"/>
+
+    <LinearLayout
+        android:id="@+id/device_admin_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/enable_receiver_checkbox"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_device_admin_padding">
 
         <Button
-            android:id="@+id/start_button"
+            android:id="@+id/enable_admin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="@dimen/button_min_width"
-            android:onClick="onClickStartSwitcher"
-            android:text="@string/label_button_start_enabled"/>
+            android:onClick="onClickEnableDeviceAdmin"
+            android:text="@string/label_button_enable_admin"/>
 
         <Button
-            android:id="@+id/stop_button"
+            android:id="@+id/disable_admin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="@dimen/button_min_width"
-            android:onClick="onClickStopSwitcher"
-            android:text="@string/label_button_stop_enabled"/>
+            android:onClick="onClickDisableDeviceAdmin"
+            android:text="@string/label_button_disable_admin"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/device_admin_layout"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/test_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickTest"
+            android:text="@string/label_button_test_lock"/>
     </LinearLayout>
 
 </RelativeLayout>
