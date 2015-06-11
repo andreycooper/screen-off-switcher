@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.weezlabs.screenoffswitcher.util.Utils;
@@ -35,7 +36,8 @@ public class PhoneStateReceiver extends WakefulBroadcastReceiver {
         if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
             Log.i(LOG_TAG, "Phone is ringing");
 
-            lockScreen(devicePolicyManager, componentName);
+            Utils.setPhoneState(context, state);
+            lockScreen(devicePolicyManager, componentName, Utils.getTimeToLock(context));
 
         }
         if (state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
@@ -44,10 +46,18 @@ public class PhoneStateReceiver extends WakefulBroadcastReceiver {
         if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
             Log.i(LOG_TAG, "Phone is Idle");
 
+            String previousString = Utils.getPreviousState(context);
+            if (!TextUtils.isEmpty(previousString)
+                    && previousString.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+                lockScreen(devicePolicyManager, componentName, Utils.getTimeToLock(context));
+            }
+            Utils.setPhoneState(context, state);
+
         }
     }
 
-    private void lockScreen(final DevicePolicyManager devicePolicyManager, final ComponentName componentName) {
+    private void lockScreen(final DevicePolicyManager devicePolicyManager,
+                            final ComponentName componentName, int waitTime) {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -57,7 +67,7 @@ public class PhoneStateReceiver extends WakefulBroadcastReceiver {
                 }
             }
         };
-        timer.schedule(timerTask, 100);
+        timer.schedule(timerTask, waitTime);
     }
 
 }

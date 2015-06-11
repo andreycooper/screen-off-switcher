@@ -6,5 +6,7 @@
     <dimen name="checkbox_padding">16dp</dimen>
     <dimen name="layout_device_admin_padding">16dp</dimen>
     <dimen name="button_min_width">200dp</dimen>
+    <dimen name="header_text_padding">6dp</dimen>
+    <dimen name="header_text_size">16sp</dimen>
 
 </resources>

@@ -6,11 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.weezlabs.screenoffswitcher.util.Utils;
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private DevicePolicyManager mDevicePolicyManager;
     private ComponentName mComponentName;
     private CheckBox mEnableReceiverCheckBox;
+    private EditText mTimeEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +38,13 @@ public class MainActivity extends AppCompatActivity {
         mComponentName = new ComponentName(getApplicationContext(), AdminReceiver.class);
 
         mEnableReceiverCheckBox = (CheckBox) findViewById(R.id.enable_receiver_checkbox);
+        mTimeEditText = (EditText) findViewById(R.id.time_edit_text);
+
         mEnableReceiverCheckBox.setEnabled(isAdmin());
         mEnableReceiverCheckBox.setChecked(Utils.isPhoneStateReceiverWork(getApplicationContext()));
+        mTimeEditText.setEnabled(isAdmin());
+        mTimeEditText.setText(String.valueOf(Utils.getTimeToLock(getApplicationContext())));
+        mTimeEditText.setSelection(mTimeEditText.getText().length());
 
         mEnableReceiverCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -48,6 +58,33 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mTimeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int time;
+                if (!TextUtils.isEmpty(s.toString())) {
+                    time = Integer.parseInt(s.toString());
+                } else {
+                    time = Utils.DEFAULT_TIME;
+                }
+                if (time <= 0) {
+                    time = Utils.DEFAULT_TIME;
+                }
+                setTimeToLock(time);
+            }
+        });
+
 
     }
 
@@ -79,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         getString(R.string.toast_register_admin_failed), Toast.LENGTH_SHORT).show();
             }
             mEnableReceiverCheckBox.setEnabled(isAdmin());
+            mTimeEditText.setEnabled(isAdmin());
         }
     }
 
@@ -101,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     getString(R.string.toast_register_admin_removed), Toast.LENGTH_SHORT).show();
             mEnableReceiverCheckBox.setEnabled(false);
+            mTimeEditText.setEnabled(false);
         } else {
             Toast.makeText(getApplicationContext(),
                     getString(R.string.toast_register_admin_denied), Toast.LENGTH_SHORT).show();
@@ -119,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setReceiverWork(boolean isWork) {
         Utils.setPhoneStateReceiverWork(getApplicationContext(), isWork);
+    }
+
+    private void setTimeToLock(int time) {
+        Utils.setTimeToLock(getApplicationContext(), time);
     }
 
     private boolean isAdmin() {
